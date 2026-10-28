@@ -10,6 +10,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776AB?logo=python&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-MLP-EE4C2C?logo=pytorch&logoColor=white)
+[![CI](https://github.com/tangerineYR/bank-marketing-mlp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tangerineYR/bank-marketing-mlp/actions/workflows/ci.yml)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-Preprocessing%20%26%20Baselines-F7931E?logo=scikitlearn&logoColor=white)
 
 **[Results](results/metrics.json)** · **[Hyperparameter Search](results/search_results.csv)** · **[Experiment Manifest](results/run_manifest.json)** · **[Historical Baseline](historical/baseline_2025.py)**
