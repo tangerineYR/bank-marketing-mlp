@@ -6,6 +6,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776AB?logo=python&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-MLP-EE4C2C?logo=pytorch&logoColor=white)
+[![CI](https://github.com/tangerineYR/bank-marketing-mlp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tangerineYR/bank-marketing-mlp/actions/workflows/ci.yml)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-Preprocessing%20%26%20Baselines-F7931E?logo=scikitlearn&logoColor=white)
 ![Tests](https://img.shields.io/badge/Local_Tests-25%20Passed-555555)
 
