@@ -21,7 +21,7 @@ def main():
     args = vars(parser.parse_args())
     torch.set_num_threads(args.pop('threads'))
     result = run_experiment(**args)
-    print('Corrected primary experiment completed:', result['test_metrics'], flush=True)
+    print('Primary MLP experiment completed:', result['test_metrics'], flush=True)
 
 
 if __name__ == '__main__':

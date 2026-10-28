@@ -1,25 +1,28 @@
+<div align="center">
+
 # Bank Marketing MLP
 
 ### Leakage-aware Tabular Classification with PyTorch
 
 **UCI Bank Marketing 데이터를 활용해 정기예금 가입 여부를 분류하는 PyTorch MLP를 구현하고, 데이터 누수 방지·클래스 불균형 대응·검증 기반 모델 선택을 통해 재현 가능한 학습 및 평가 파이프라인을 구축한 프로젝트입니다.**
 
+<br/>
+
 ![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776AB?logo=python&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-MLP-EE4C2C?logo=pytorch&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-Preprocessing%20%26%20Baselines-F7931E?logo=scikitlearn&logoColor=white)
-![Tests](https://img.shields.io/badge/Local_Tests-25%20Passed-555555)
 
 **[Results](results/metrics.json)** · **[Hyperparameter Search](results/search_results.csv)** · **[Experiment Manifest](results/run_manifest.json)** · **[Historical Baseline](historical/baseline_2025.py)**
+
+</div>
 
 ---
 
 ## 📌 Overview
 
-이 프로젝트는 2025년 3학년 1학기 **딥러닝개론 개인 프로젝트**로, 포르투갈 은행의 텔레마케팅 데이터를 바탕으로 정기예금 가입 여부(`yes` / `no`)를 이진 분류하기 위해 수행했습니다.
+딥러닝개론 수업에서 **PyTorch 기반 MLP(128→64→1)**를 직접 구현하고, Batch Normalization, Dropout, Kaiming Initialization, Class-weighted BCE Loss, Learning Rate Scheduling, Early Stopping과 81개 하이퍼파라미터 조합 탐색을 적용했습니다.
 
-원본 과제에서는 PyTorch를 사용해 MLP(128→64→1)를 직접 구현하고, Batch Normalization, Dropout, He Initialization, Class-weighted BCE Loss, Learning Rate Scheduling, Early Stopping과 81개 하이퍼파라미터 조합 탐색을 적용했습니다.
-
-이후 Portfolio Refactoring에서는 기존 구현의 학습·평가 방법론을 검토하여 **사후 정보 변수 사용, 전처리 누수, 테스트셋을 이용한 하이퍼파라미터 선택** 문제를 수정했습니다.
+현재 학습 파이프라인은 **입력 특성의 사용 가능 시점, 훈련 데이터 기반 전처리, 검증 데이터 기반 하이퍼파라미터 선택, 최적 체크포인트 복원 및 독립 테스트셋 평가**를 고려해 설계했습니다. 이를 통해 모델 성능뿐 아니라 평가 과정의 신뢰성과 재현성을 검증합니다.
 
 프로젝트의 핵심은 복잡한 모델을 추가하는 것이 아니라, 기존 딥러닝 모델을 **신뢰할 수 있는 평가 프로토콜로 검증할 수 있도록 개선한 것**입니다.
 
@@ -75,7 +78,7 @@ UCI Bank Marketing의 `duration`은 마지막 통화 시간(초)을 의미하며
 
 | Setting | `duration` | Purpose |
 | --- | --- | --- |
-| **Primary — `realistic_pre_contact`** | 제외 | Portfolio 대표 평가 |
+| **Primary — `realistic_pre_contact`** | 제외 | Pre-contact classification evaluation |
 | Secondary — `duration_inclusive` | 포함 | Feature-availability sensitivity analysis |
 
 Primary 모델은 `duration`을 제외한 15개 원본 입력 변수에서 시작하며, 전처리 후 **50-dimensional input**을 사용합니다.
@@ -84,9 +87,9 @@ Secondary 실험은 동일 split과 primary에서 선택된 하이퍼파라미�
 
 ### 2. Train-only Preprocessing
 
-기존 과제에서는 전체 데이터를 원-핫 인코딩·표준화한 다음 분할했습니다.
+전체 데이터에 전처리를 학습하면 검증·테스트 데이터의 분포가 학습 과정에 반영될 수 있습니다.
 
-현재 파이프라인에서는 먼저 데이터를 분할한 뒤, **훈련 데이터에만 preprocessing을 fit**합니다.
+이를 방지하기 위해 데이터 분할을 먼저 수행하고, StandardScaler와 OneHotEncoder를 훈련 데이터에만 fit합니다. 검증·테스트 데이터에는 학습된 변환만 적용합니다.
 
 ```text
 Raw Data
@@ -120,7 +123,7 @@ UCI 원본의 문자열 `"unknown"`은 실제 NaN으로 간주하지 않고 범�
 
 ## 🧠 PyTorch MLP
 
-기존 과제에서 직접 설계한 MLP 구조를 유지했습니다.
+MLP는 두 개의 은닉층(128, 64)과 하나의 출력층으로 구성되며, Batch Normalization, LeakyReLU, Dropout을 적용합니다.
 
 ```text
 Input (50)
@@ -172,7 +175,7 @@ Binary Logit
 
 ## 🔍 Hyperparameter Search
 
-원본 과제의 81개 조합을 유지하면서 모델 선택 기준을 수정했습니다.
+Learning Rate, Batch Size, 두 은닉층의 Dropout Rate를 조합한 81개 설정을 탐색하고, Validation Average Precision(AP)을 기준으로 모델을 선택합니다.
 
 | Parameter | Search Space |
 | --- | --- |
@@ -307,15 +310,11 @@ bank-marketing-mlp/
 │   └── validate_artifacts.py      # 결과 artifact 검증
 │
 ├── results/
-│   ├── metrics.json               # 검증된 최종 성능
-│   ├── search_results.csv         # 81개 조합의 validation 결과
-│   ├── split_indices.json         # 데이터 분할 인덱스
-│   ├── selected_history.json      # 선택 모델의 학습 이력
-│   ├── run_manifest.json          # 실행 환경·코드 해시
-│   ├── verification.json          # 최종 검증 기록
-│   ├── regression_comparison.json # day 명칭 수정 전후 회귀 비교
-│   ├── test_results.txt
-│   ├── smoke_results.txt
+│   ├── metrics.json               # 모델 평가 지표 및 데이터 정보
+│   ├── search_results.csv         # 81개 하이퍼파라미터 탐색 결과
+│   ├── split_indices.json         # 학습·검증·테스트 분할 인덱스
+│   ├── selected_history.json      # 선택 모델의 학습 곡선 데이터
+│   ├── run_manifest.json          # 기록된 실험의 실행 환경·소스 체크섬
 │   └── figures/
 │       ├── training_curve.png
 │       ├── confusion_matrix.png
@@ -353,8 +352,6 @@ cd bank-marketing-mlp
 python -m pip install -r requirements.txt
 ```
 
-GitHub 레포지토리를 생성하고 업로드한 이후 사용할 수 있는 주소입니다.
-
 ### 2. Run Tests
 
 외부 UCI 데이터 다운로드 없이 실행할 수 있습니다.
@@ -364,7 +361,7 @@ python -m unittest discover -s tests -v
 python -m scripts.smoke
 ```
 
-제출된 패치본은 로컬에서 **25개 테스트와 synthetic smoke를 통과**했습니다.
+자동화 테스트 25개와 synthetic smoke test를 통해 데이터 전처리, 모델 구조, 학습·평가 및 실험 파이프라인을 검증합니다. GitHub Actions는 push 및 pull request에서 이를 자동 실행합니다.
 
 ### 3. Validate Existing Results
 
@@ -372,18 +369,14 @@ python -m scripts.smoke
 python -m scripts.validate_artifacts results
 ```
 
-이 명령은 기존에 저장된 결과 artifact의 구조·숫자·모델 선택·분할 무결성·원본 보존 해시를 검증합니다. 전체 모델을 다시 학습하지 않습니다.
+저장된 탐색 결과, 모델 선택 기준, 평가 지표, 데이터 분할, 그림 파일 형식 및 수업 구현 코드의 SHA-256을 검증합니다. 전체 모델을 다시 학습하거나 run_manifest.json에 기록된 모든 소스 파일의 체크섬을 현재 코드와 비교하지는 않습니다.
+
+run_manifest.json의 source_sha256은 저장된 실험을 수행한 당시의 코드 스냅샷을 기록한 값입니다. 이후의 문서·주석 변경으로 현재 저장소의 파일 해시와 달라질 수 있습니다.
 
 ### 4. Reproduce Full Experiment
 
 ```bash
-python -m scripts.run_experiment \
-  --seed 42 \
-  --feature-mode realistic_pre_contact \
-  --device cpu \
-  --sensitivity \
-  --workers 8 \
-  --output-dir results-rerun
+python -m scripts.run_experiment --seed 42 --feature-mode realistic_pre_contact --device cpu --sensitivity --workers 8 --output-dir results-rerun
 ```
 
 전체 실행은 81개 MLP trial과 baseline 평가를 수행합니다.
@@ -391,6 +384,8 @@ python -m scripts.run_experiment \
 UCI 공식 archive를 다운로드하므로 데이터 접근을 위한 네트워크 연결이 필요합니다.
 
 기존 검증 결과를 덮어쓰지 않도록 새로운 output directory를 지정합니다.
+
+results-rerun/에는 모델 지표, 탐색 결과, 분할 인덱스, 학습 이력 및 시각화가 생성됩니다. run_manifest.json은 저장된 실험에 대한 별도 실행 기록으로, 현재 실험 CLI가 자동 생성하는 파일은 아닙니다.
 
 ```bash
 python -m scripts.validate_artifacts results-rerun
@@ -406,26 +401,26 @@ python -m scripts.validate_artifacts results-rerun
 
 ---
 
-## 🔄 Historical Project vs Portfolio Refactoring
+## 🔧 Engineering Decisions & Validation
 
-| 항목 | Historical Project (2025) | Portfolio Refactoring (2026) |
-| --- | --- | --- |
-| Dataset | UCI Bank Marketing | 공식 원본 archive 기반 재현 |
-| Data Split | Random train/val/test | Stratified 64/16/20 |
-| Preprocessing | 전체 데이터 fit | Train-only fit |
-| Feature Availability | `duration` 포함 | Primary에서 제외 |
-| Architecture | PyTorch 128→64→1 MLP | 핵심 구조 유지 |
-| Class Imbalance | Weighted BCE | Train-only weight 계산·기록 |
-| Grid Search | 81개 조합 | 81개 유지 |
-| Model Selection | Test Accuracy | Validation PR-AUC |
-| Early Stopping | Best loss 추적 | Best checkpoint 복원 |
-| Evaluation | Test Accuracy | 다중 지표·baseline 비교 |
-| Reproducibility | Split seed | Seed·manifest·artifact 검증 |
-| Tests & CI | 없음 | 25 tests · CI workflow |
+| Concern | Engineering Decision | Verification |
+|---|---|---|
+| Feature Availability | Exclude `duration` from the primary pre-contact setting | Feature-mode tests |
+| Data Leakage | Fit preprocessing only on training data | Train-only preprocessing tests |
+| Class Imbalance | Compute BCE positive-class weight from training labels | Class-weight tests |
+| Hyperparameter Selection | Select among 81 configurations using validation AP | Search and selection tests |
+| Early Stopping | Restore the checkpoint with minimum validation loss | Checkpoint restoration tests |
+| Test Isolation | Evaluate the primary MLP after model selection | Pipeline isolation tests |
+| Model Comparison | Evaluate DummyClassifier, Logistic Regression, and MLP | Held-out test metrics |
+| Reproducibility | Record random seed, data split, runtime environment, and results | Experiment artifacts and automated tests |
 
-원본 코드는 `historical/baseline_2025.py`에 바이트 단위로 보존했습니다.
+### Coursework Implementation
 
-2026년 변경사항을 원래 수업 프로젝트의 당시 성과처럼 소급해서 주장하지 않습니다.
+The MLP architecture and 81-configuration search originate from the deep learning course project. The coursework implementation is preserved in [`historical/baseline_2025.py`](historical/baseline_2025.py).
+
+The current evaluation pipeline introduces leakage-aware preprocessing, validation-based model selection, checkpoint restoration, and baseline comparisons.
+
+The performance figures reported in this README are produced by the evaluated pipeline, not by the preserved coursework script.
 
 ---
 
@@ -470,4 +465,8 @@ This repository does not include the original dataset as a committed CSV file; t
 
 ---
 
+<div align="center">
+
 **Reliable evaluation matters more than an impressive accuracy number.**
+
+</div>

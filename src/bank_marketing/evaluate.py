@@ -11,7 +11,7 @@ def metrics(y, probabilities):
         raise ValueError('Expected equal lengths and both binary classes')
     if not np.isfinite(probabilities).all() or np.any((probabilities < 0) | (probabilities > 1)):
         raise ValueError('Invalid probabilities')
-    labels = probabilities > .5  # Historical strict threshold convention.
+    labels = probabilities > .5  # Classify as positive only when probability exceeds 0.5.
     tn, fp, fn, tp = confusion_matrix(y, labels, labels=[0, 1]).ravel()
     return {'accuracy': float(accuracy_score(y, labels)),
             'precision': float(precision_score(y, labels, zero_division=0)),

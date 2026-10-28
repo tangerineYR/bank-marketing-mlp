@@ -1,7 +1,12 @@
 {
   "recorded_at": "2026-10-26T17:04:28.660156+09:00",
-  "command": "python -m scripts.run_experiment --seed 42 --feature-mode realistic_pre_contact --device cpu --sensitivity --workers 8 --output-dir results-new",
-  "rerun_reason": "Semantic correctness patch: retain original bank-full.csv day (day of month); regenerate all experiment artifacts from patched source.",
+  "execution_parameters": {
+  "seed": 42,
+  "feature_mode": "realistic_pre_contact",
+  "device": "cpu",
+  "sensitivity": true,
+  "workers": 8
+  },
   "python": "3.11.3",
   "packages": {
     "numpy": "1.26.4",
@@ -31,10 +36,5 @@
     ".github/workflows/ci.yml": "d30e3dbb88db6d971e741a043a060d434d6e6ac48ba129babfbbf3b468a60010",
     ".gitignore": "4db58fc4967463c4d6c47ca017e6c03fe6ea27af141328f5d95fd1156054ebfd"
   },
-  "historical_sha256": "721d45353446a724313cebed5d999d4c7c24ee91da86a6c2aec144db446a760a",
-  "notes": [
-    "Full fresh 81-configuration search; no old metric values copied into new experimental results.",
-    "The requested rerun reuses the previously evaluated split for a naming-only regression check; no test-driven model tuning.",
-    "The test set remains isolated during search in each run."
-  ]
+  "historical_sha256": "721d45353446a724313cebed5d999d4c7c24ee91da86a6c2aec144db446a760a"
 }

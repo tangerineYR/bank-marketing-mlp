@@ -1,4 +1,4 @@
-"""Offline synthetic smoke training; never portfolio evidence."""
+"""Offline synthetic smoke test for the training pipeline."""
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))

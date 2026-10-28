@@ -129,7 +129,7 @@ def _trial_iterator(train_data, validation_data, seed, device, workers):
 
 
 def search_hyperparameters(train_data, validation_data, *, seed=42, device='cpu', output_csv=None, workers=1):
-    """All 81 historical configurations. Rank AP, then loss, then grid order."""
+    """Evaluate 81 predefined configurations; rank by AP, loss, then grid order."""
     best, best_rank, rows = None, None, []
     metric_names = ['accuracy', 'precision', 'recall', 'f1', 'roc_auc', 'pr_auc']
     for trial_id, trial in enumerate(_trial_iterator(train_data, validation_data, seed, device, workers), 1):

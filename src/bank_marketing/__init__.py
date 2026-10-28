@@ -1,2 +1,1 @@
-"""Leakage-safe Bank Marketing refactoring."""
-
+"""PyTorch MLP pipeline for Bank Marketing classification."""

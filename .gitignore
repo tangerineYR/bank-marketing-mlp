@@ -8,4 +8,6 @@ __pycache__/
 *.pth
 data/
 work/
-
+results-rerun/
+results-new/
+results-old/

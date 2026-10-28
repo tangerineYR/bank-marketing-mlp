@@ -1,1 +1,0 @@
-Synthetic smoke passed: completed 1
