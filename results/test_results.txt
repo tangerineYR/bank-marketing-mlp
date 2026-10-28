@@ -1,0 +1,30 @@
+test_actual_nan_rejected (test_data.DataTests.test_actual_nan_rejected) ... ok
+test_feature_modes (test_data.DataTests.test_feature_modes) ... ok
+test_invalid_target_and_schema_rejected (test_data.DataTests.test_invalid_target_and_schema_rejected) ... ok
+test_numeric_inf_rejected (test_data.DataTests.test_numeric_inf_rejected) ... ok
+test_scaler_uses_only_train (test_data.DataTests.test_scaler_uses_only_train) ... ok
+test_stratified_disjoint_split (test_data.DataTests.test_stratified_disjoint_split) ... ok
+test_target_encoding (test_data.DataTests.test_target_encoding) ... ok
+test_unknown_and_unseen_categories (test_data.DataTests.test_unknown_and_unseen_categories) ... ok
+test_invalid_probabilities (test_evaluation.EvaluationTests.test_invalid_probabilities) ... ok
+test_known_metrics (test_evaluation.EvaluationTests.test_known_metrics) ... ok
+test_threshold_boundary (test_evaluation.EvaluationTests.test_threshold_boundary) ... ok
+test_architecture_and_dropout (test_model.ModelTests.test_architecture_and_dropout) ... ok
+test_dimensions_and_finite_logits (test_model.ModelTests.test_dimensions_and_finite_logits) ... ok
+test_initialization_reproducible (test_model.ModelTests.test_initialization_reproducible) ... ok
+test_final_evaluation_only_after_selection (test_pipeline.PipelineTests.test_final_evaluation_only_after_selection) ... ok
+test_original_archive_loader_keeps_unknown (test_pipeline.PipelineTests.test_original_archive_loader_keeps_unknown) ... ok
+test_primary_cannot_search_duration_mode (test_pipeline.PipelineTests.test_primary_cannot_search_duration_mode) ... ok
+test_early_stop_restores_best_state (test_training.TrainingTests.test_early_stop_restores_best_state) ... ok
+test_nonfinite_gradient_rejected (test_training.TrainingTests.test_nonfinite_gradient_rejected) ... ok
+test_nonfinite_loss_rejected (test_training.TrainingTests.test_nonfinite_loss_rejected) ... ok
+test_repeated_training_same_seed (test_training.TrainingTests.test_repeated_training_same_seed) ... ok
+test_search_isolation_selection_and_failed_exclusion (test_training.TrainingTests.test_search_isolation_selection_and_failed_exclusion) ... ok
+test_search_signature_and_grid (test_training.TrainingTests.test_search_signature_and_grid) ... ok
+test_tiny_training_and_singleton_tail (test_training.TrainingTests.test_tiny_training_and_singleton_tail) ... ok
+test_train_only_class_weight (test_training.TrainingTests.test_train_only_class_weight) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 7.992s
+
+OK

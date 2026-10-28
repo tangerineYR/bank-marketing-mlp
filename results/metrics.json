@@ -1,0 +1,290 @@
+{
+  "dataset": {
+    "name": "UCI Bank Marketing",
+    "uci_id": 222,
+    "total_rows": 45211,
+    "positive": 5289,
+    "negative": 39922,
+    "actual_nan_counts": {
+      "age": 0,
+      "job": 0,
+      "marital": 0,
+      "education": 0,
+      "default": 0,
+      "balance": 0,
+      "housing": 0,
+      "loan": 0,
+      "contact": 0,
+      "day": 0,
+      "month": 0,
+      "duration": 0,
+      "campaign": 0,
+      "pdays": 0,
+      "previous": 0,
+      "poutcome": 0,
+      "y": 0
+    },
+    "nan_policy": "reject actual NaN; retain literal unknown",
+    "unknown_counts": {
+      "job": 288,
+      "marital": 0,
+      "education": 1857,
+      "default": 0,
+      "housing": 0,
+      "loan": 0,
+      "contact": 13020,
+      "month": 0,
+      "poutcome": 36959
+    },
+    "validated_frame_sha256": "7956c84466ef38ad7c9be20a39ff9792c2cd5efd10fb10bdef540e60193fbbc2",
+    "source": "https://archive.ics.uci.edu/static/public/222/bank+marketing.zip",
+    "variant": "bank-full.csv (45211 rows, 16 original features)",
+    "day_semantics": "last contact day of month in bank-full.csv",
+    "archive_sha256": "e0bf5f5de5b846e2f18e9d90606637267d46dfa260e0f17bb12e605db5efbeb4",
+    "raw_csv_sha256": "d1513ec63b385506f7cfce9f2c5caa9fe99e7ba4e8c3fa264b3aaf0f849ed32d"
+  },
+  "split": {
+    "train": {
+      "rows": 28934,
+      "positive": 3385,
+      "negative": 25549,
+      "positive_ratio": 0.1169903919264533
+    },
+    "validation": {
+      "rows": 7234,
+      "positive": 846,
+      "negative": 6388,
+      "positive_ratio": 0.11694774675145148
+    },
+    "test": {
+      "rows": 9043,
+      "positive": 1058,
+      "negative": 7985,
+      "positive_ratio": 0.11699657193409267
+    }
+  },
+  "feature_mode": "realistic_pre_contact",
+  "duration": "excluded",
+  "input_dimension": 50,
+  "preprocessing": {
+    "fit_on": "train only",
+    "numeric": "StandardScaler",
+    "categorical": "OneHotEncoder(handle_unknown=ignore)",
+    "feature_names": [
+      "numeric__age",
+      "numeric__balance",
+      "numeric__day",
+      "numeric__campaign",
+      "numeric__pdays",
+      "numeric__previous",
+      "categorical__job_admin.",
+      "categorical__job_blue-collar",
+      "categorical__job_entrepreneur",
+      "categorical__job_housemaid",
+      "categorical__job_management",
+      "categorical__job_retired",
+      "categorical__job_self-employed",
+      "categorical__job_services",
+      "categorical__job_student",
+      "categorical__job_technician",
+      "categorical__job_unemployed",
+      "categorical__job_unknown",
+      "categorical__marital_divorced",
+      "categorical__marital_married",
+      "categorical__marital_single",
+      "categorical__education_primary",
+      "categorical__education_secondary",
+      "categorical__education_tertiary",
+      "categorical__education_unknown",
+      "categorical__default_no",
+      "categorical__default_yes",
+      "categorical__housing_no",
+      "categorical__housing_yes",
+      "categorical__loan_no",
+      "categorical__loan_yes",
+      "categorical__contact_cellular",
+      "categorical__contact_telephone",
+      "categorical__contact_unknown",
+      "categorical__month_apr",
+      "categorical__month_aug",
+      "categorical__month_dec",
+      "categorical__month_feb",
+      "categorical__month_jan",
+      "categorical__month_jul",
+      "categorical__month_jun",
+      "categorical__month_mar",
+      "categorical__month_may",
+      "categorical__month_nov",
+      "categorical__month_oct",
+      "categorical__month_sep",
+      "categorical__poutcome_failure",
+      "categorical__poutcome_other",
+      "categorical__poutcome_success",
+      "categorical__poutcome_unknown"
+    ]
+  },
+  "class_distribution": {
+    "train": {
+      "rows": 28934,
+      "positive": 3385,
+      "negative": 25549,
+      "positive_ratio": 0.1169903919264533
+    },
+    "validation": {
+      "rows": 7234,
+      "positive": 846,
+      "negative": 6388,
+      "positive_ratio": 0.11694774675145148
+    },
+    "test": {
+      "rows": 9043,
+      "positive": 1058,
+      "negative": 7985,
+      "positive_ratio": 0.11699657193409267
+    }
+  },
+  "pos_weight": {
+    "positive": 3385,
+    "negative": 25549,
+    "pos_weight": 7.547710487444609
+  },
+  "best_hyperparameters": {
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "dropout1": 0.5,
+    "dropout2": 0.4
+  },
+  "best_epoch": 38,
+  "selection_metric": "highest validation average precision; tie: lowest best validation loss, then trial_id",
+  "threshold": 0.5,
+  "threshold_rule": "probability > threshold",
+  "positive_class": "yes",
+  "checkpoint_rule": "minimum validation weighted BCE; restored before metrics",
+  "validation_metrics": {
+    "accuracy": 0.8016311860658004,
+    "precision": 0.32767700409596257,
+    "recall": 0.6619385342789598,
+    "f1": 0.4383561643835616,
+    "roc_auc": 0.7989013457561533,
+    "pr_auc": 0.45486851960129376,
+    "confusion_matrix": {
+      "tn": 5239,
+      "fp": 1149,
+      "fn": 286,
+      "tp": 560
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.7992922702642928,
+    "precision": 0.31984769157544024,
+    "recall": 0.6351606805293005,
+    "f1": 0.4254510921177588,
+    "roc_auc": 0.7928114860921884,
+    "pr_auc": 0.4380609168959116,
+    "confusion_matrix": {
+      "tn": 6556,
+      "fp": 1429,
+      "fn": 386,
+      "tp": 672
+    }
+  },
+  "test_usage": "one final primary MLP evaluation after all 81 trials; no test-driven changes",
+  "search_summary": {
+    "total": 81,
+    "successful": 81,
+    "failed": 0,
+    "completed": 0,
+    "early_stopped": 81
+  },
+  "dummy_baseline": {
+    "accuracy": 0.8830034280659074,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "roc_auc": 0.5,
+    "pr_auc": 0.11699657193409267,
+    "confusion_matrix": {
+      "tn": 7985,
+      "fp": 0,
+      "fn": 1058,
+      "tp": 0
+    }
+  },
+  "logistic_regression_baseline": {
+    "accuracy": 0.75494857901139,
+    "precision": 0.2676565008025682,
+    "recall": 0.6304347826086957,
+    "f1": 0.37577464788732395,
+    "roc_auc": 0.7720186597507377,
+    "pr_auc": 0.4090615779173566,
+    "confusion_matrix": {
+      "tn": 6160,
+      "fp": 1825,
+      "fn": 391,
+      "tp": 667
+    }
+  },
+  "reproducibility": {
+    "seed": 42,
+    "python": "3.11.3",
+    "pytorch": "2.7.1+cpu",
+    "scikit_learn": "1.4.1.post1",
+    "numpy": "1.26.4",
+    "device": "cpu",
+    "torch_threads": 1,
+    "search_workers": 8,
+    "deterministic_algorithms": "warn_only",
+    "split_indices_artifact": "split_indices.json"
+  },
+  "limitations": [
+    "Single dataset; single random split; single primary random seed.",
+    "Tabular MLP is not necessarily superior to classical ML.",
+    "Random IID splitting does not simulate every temporal deployment scenario.",
+    "Historical association does not imply causal marketing effect.",
+    "Pre-contact mode removes duration; other fields still require availability checks in a concrete deployment.",
+    "PR-AUC is sklearn average precision, not trapezoidal PR area."
+  ],
+  "duration_inclusive_sensitivity": {
+    "feature_mode": "duration_inclusive",
+    "purpose": "feature-availability sensitivity only; not pre-contact deployable performance",
+    "same_split_indices": true,
+    "seed": 42,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 32,
+      "dropout1": 0.5,
+      "dropout2": 0.4
+    },
+    "input_dimension": 51,
+    "status": "early_stopped",
+    "best_epoch": 38,
+    "validation_metrics": {
+      "accuracy": 0.854299142936135,
+      "precision": 0.44016110471806674,
+      "recall": 0.9042553191489362,
+      "f1": 0.5921052631578947,
+      "roc_auc": 0.9362819766968503,
+      "pr_auc": 0.6139508774188981,
+      "confusion_matrix": {
+        "tn": 5415,
+        "fp": 973,
+        "fn": 81,
+        "tp": 765
+      }
+    },
+    "test_metrics": {
+      "accuracy": 0.8492756828486122,
+      "precision": 0.42877160205511444,
+      "recall": 0.8676748582230623,
+      "f1": 0.5739293529227883,
+      "roc_auc": 0.9277435361435017,
+      "pr_auc": 0.602107857601901,
+      "confusion_matrix": {
+        "tn": 6762,
+        "fp": 1223,
+        "fn": 140,
+        "tp": 918
+      }
+    }
+  }
+}

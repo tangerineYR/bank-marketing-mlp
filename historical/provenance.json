@@ -1,0 +1,7 @@
+{
+  "artifact": "baseline_2025.py",
+  "role": "Historical course-project implementation; current evaluation pipeline is under src/.",
+  "preservation": "Byte-for-byte copy; original local file retained.",
+  "sha256": "721d45353446a724313cebed5d999d4c7c24ee91da86a6c2aec144db446a760a",
+  "public_filename_policy": "Student identifier excluded from repository filenames."
+}

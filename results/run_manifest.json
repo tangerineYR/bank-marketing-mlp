@@ -1,0 +1,40 @@
+{
+  "recorded_at": "2026-10-26T17:04:28.660156+09:00",
+  "command": "python -m scripts.run_experiment --seed 42 --feature-mode realistic_pre_contact --device cpu --sensitivity --workers 8 --output-dir results-new",
+  "rerun_reason": "Semantic correctness patch: retain original bank-full.csv day (day of month); regenerate all experiment artifacts from patched source.",
+  "python": "3.11.3",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.2.3",
+    "torch": "2.7.1",
+    "scikit-learn": "1.4.1.post1",
+    "ucimlrepo": "0.0.7",
+    "matplotlib": "3.9.4"
+  },
+  "source_sha256": {
+    "src/bank_marketing/baselines.py": "e8a5a2d3ea94efebd5bdb2f2124efa74d2880f4999f6193019325def2527defc",
+    "src/bank_marketing/data.py": "a54c7d902e3de0fa66b22ad317f2da3537a306c66f9eaf46d2479afff134a190",
+    "src/bank_marketing/evaluate.py": "184de887399d2c8ce0bddfe6268ea7d86ee4e1a51120a80a511378ac9515a9ac",
+    "src/bank_marketing/experiment.py": "ba3a2d2df16741e8e9a3ed739e9f9709d8be54572276b14681974e1080e73985",
+    "src/bank_marketing/model.py": "9254728f8761f46a4fc4f04bbfb233864f070586de99efa01c66988e81a3ab65",
+    "src/bank_marketing/train.py": "55f7ab023ef1a48697377946c68b3eac0c3c489fbd00d7e537d63823e05131a1",
+    "src/bank_marketing/__init__.py": "8413ec9bf6cb698d4c7348515ed79f02801002b8b1e2d06101443e3877d2f18d",
+    "scripts/run_experiment.py": "9bc27628a195012d95fdef7a6c56097437b7ffd7efc33b793de5088193455735",
+    "scripts/smoke.py": "52548cec05e2d3475c4affb791b11ce6ac7955b8968a043f00678b980f79e466",
+    "scripts/validate_artifacts.py": "a04b073db6665553dcdba62a7bb645d28b5aa78a1338ac04956f1e561852c9c9",
+    "tests/test_data.py": "6e130854390102dcb7af72acd6787c46b5c1eb031bdee352abd381f2e0266649",
+    "tests/test_evaluation.py": "7e2d1b549cb210dd2b007b5da1c932275510d5fbd6432d6dc1d3f9bf9135bc8a",
+    "tests/test_model.py": "c2566ea0b9513538fddf93c5cc6de4e69f5d7770ea0b25bbbc5342d92fb45110",
+    "tests/test_pipeline.py": "735eeca7cdcf34b6bb66a3fa2209df15dede1e6782c27a9e26356d2200771893",
+    "tests/test_training.py": "f5e530698886388f250d19344379eb74685c1131c158b5329fcc66d3a85659c2",
+    "requirements.txt": "5ea509689729b7d81ed89f221e0836708af517e4f37b0d73188fde1b0d277bb5",
+    ".github/workflows/ci.yml": "d30e3dbb88db6d971e741a043a060d434d6e6ac48ba129babfbbf3b468a60010",
+    ".gitignore": "4db58fc4967463c4d6c47ca017e6c03fe6ea27af141328f5d95fd1156054ebfd"
+  },
+  "historical_sha256": "721d45353446a724313cebed5d999d4c7c24ee91da86a6c2aec144db446a760a",
+  "notes": [
+    "Full fresh 81-configuration search; no old metric values copied into new experimental results.",
+    "The requested rerun reuses the previously evaluated split for a naming-only regression check; no test-driven model tuning.",
+    "The test set remains isolated during search in each run."
+  ]
+}
