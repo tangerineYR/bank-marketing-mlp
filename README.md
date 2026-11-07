@@ -21,7 +21,7 @@
 
 ## 📌 Overview
 
-딥러닝개론 수업에서 **PyTorch 기반 MLP(128→64→1)**를 직접 구현하고, Batch Normalization, Dropout, Kaiming Initialization, Class-weighted BCE Loss, Learning Rate Scheduling, Early Stopping과 81개 하이퍼파라미터 조합 탐색을 적용했습니다.
+딥러닝개론 수업에서 **PyTorch 기반 MLP(128→64→1)** 를 직접 구현하고, Batch Normalization, Dropout, Kaiming Initialization, Class-weighted BCE Loss, Learning Rate Scheduling, Early Stopping과 81개 하이퍼파라미터 조합 탐색을 적용했습니다.
 
 현재 학습 파이프라인은 **입력 특성의 사용 가능 시점, 훈련 데이터 기반 전처리, 검증 데이터 기반 하이퍼파라미터 선택, 최적 체크포인트 복원 및 독립 테스트셋 평가**를 고려해 설계했습니다. 이를 통해 모델 성능뿐 아니라 평가 과정의 신뢰성과 재현성을 검증합니다.
 
@@ -63,7 +63,7 @@ flowchart TD
     J --> K["Metrics · Baselines · Figures"]
 ```
 
-**Test data is not used to select hyperparameters.** The primary model is selected on validation data, and its held-out test evaluation is performed after model selection.
+**하이퍼파라미터 선택에는 테스트 데이터를 사용하지 않습니다.** 검증 데이터의 PR-AUC(AP)를 기준으로 최적 모델을 선택한 뒤, 최종적으로 분리된 테스트셋(Held-out Test Set)에서 모델 성능을 평가합니다.
 
 ---
 
@@ -404,24 +404,24 @@ python -m scripts.validate_artifacts results-rerun
 
 ## 🔧 Engineering Decisions & Validation
 
-| Concern | Engineering Decision | Verification |
+| 검토 항목 | 설계 결정 | 검증 방법 |
 |---|---|---|
-| Feature Availability | Exclude `duration` from the primary pre-contact setting | Feature-mode tests |
-| Data Leakage | Fit preprocessing only on training data | Train-only preprocessing tests |
-| Class Imbalance | Compute BCE positive-class weight from training labels | Class-weight tests |
-| Hyperparameter Selection | Select among 81 configurations using validation AP | Search and selection tests |
-| Early Stopping | Restore the checkpoint with minimum validation loss | Checkpoint restoration tests |
-| Test Isolation | Evaluate the primary MLP after model selection | Pipeline isolation tests |
-| Model Comparison | Evaluate DummyClassifier, Logistic Regression, and MLP | Held-out test metrics |
-| Reproducibility | Record random seed, data split, runtime environment, and results | Experiment artifacts and automated tests |
+| 입력 변수의 사용 가능 시점 | 사전 연락 대상 선별을 위한 Primary 모델에서 통화 종료 후에만 알 수 있는 `duration` 제외 | Feature Mode 검증 테스트 |
+| 데이터 누수 방지 | 전처리기의 학습(Fit)은 훈련 데이터에만 수행하고 검증·테스트 데이터에는 동일한 변환 적용 | Train-only 전처리 테스트 |
+| 클래스 불균형 대응 | 훈련 데이터의 클래스 분포를 기준으로 BCE 손실함수의 양성 클래스 가중치 계산 | 클래스 가중치 검증 테스트 |
+| 하이퍼파라미터 선택 | 81개 조합을 탐색하고 Validation PR-AUC(AP)를 기준으로 최적 설정 선택 | 탐색 및 모델 선택 테스트 |
+| Early Stopping | 검증 손실이 가장 낮았던 Epoch의 모델 가중치를 복원 | 체크포인트 복원 테스트 |
+| 테스트셋 독립성 | 검증 데이터 기반 모델 선택을 완료한 뒤 분리된 테스트셋에서 최종 성능 평가 | 학습·평가 파이프라인 테스트 |
+| 비교 모델 평가 | DummyClassifier·Logistic Regression·MLP를 동일한 테스트셋에서 평가 | 최종 테스트 성능 지표 |
+| 실험 재현성 | Random Seed, 데이터 분할, 실행 환경, 학습·평가 결과를 기록 | 실험 산출물 및 자동화 테스트 |
 
 ### Coursework Implementation
 
-The MLP architecture and 81-configuration search originate from the deep learning course project. The coursework implementation is preserved in [`historical/baseline_2025.py`](historical/baseline_2025.py).
+MLP 모델 구조와 81개 하이퍼파라미터 조합 탐색은 2025년 딥러닝개론 수업 프로젝트에서 출발했습니다. 당시 구현 코드는 [`historical/baseline_2025.py`](historical/baseline_2025.py)에 별도로 보존했습니다.
 
-The current evaluation pipeline introduces leakage-aware preprocessing, validation-based model selection, checkpoint restoration, and baseline comparisons.
+현재 공개된 학습·평가 파이프라인에는 데이터 누수를 고려한 전처리, 검증 데이터 기반 모델 선택, 최적 체크포인트 복원 및 비교 모델 평가를 적용했습니다.
 
-The performance figures reported in this README are produced by the evaluated pipeline, not by the preserved coursework script.
+README에 제시된 성능 수치는 보존된 수업 당시 코드가 아니라, 현재 공개된 학습·평가 파이프라인에서 산출한 결과입니다.
 
 ---
 
@@ -447,9 +447,9 @@ The performance figures reported in this README are produced by the evaluated pi
 
 Moro, S., Rita, P., & Cortez, P. (2014). *Bank Marketing* [Dataset]. UCI Machine Learning Repository. [DOI: 10.24432/C5K306](https://doi.org/10.24432/C5K306).
 
-Dataset license: **CC BY 4.0**.
+데이터셋 라이선스: **CC BY 4.0**.
 
-This repository does not include the original dataset as a committed CSV file; the full experiment fetches the original UCI archive.
+이 저장소에는 원본 데이터셋 CSV를 포함하지 않습니다. 전체 실험을 실행할 때 UCI에서 제공하는 원본 데이터 아카이브를 다운로드합니다.
 
 ---
 
@@ -459,8 +459,8 @@ This repository does not include the original dataset as a committed CSV file; t
 
 동일한 Bank Marketing 도메인을 데이터베이스 관점에서 다룬 별도의 개인 프로젝트입니다.
 
-- **SQL Project:** 관계형 모델링, 데이터 무결성, SQL 기술통계, rule-based 의사결정 지원
-- **This Project:** PyTorch MLP, 불균형 이진 분류, 학습 최적화, 검증 기반 모델 평가
+- **연계 프로젝트 — SQL 분석:** 관계형 모델링, 데이터 무결성, SQL 기술통계, 규칙 기반 의사결정 지원
+- **이 프로젝트 — MLP 분류:** PyTorch MLP, 불균형 이진 분류, 학습 최적화, 검증 기반 모델 평가
 
 동일한 데이터 도메인을 서로 다른 기술적 관점에서 분석한 두 프로젝트입니다.
 
@@ -468,6 +468,6 @@ This repository does not include the original dataset as a committed CSV file; t
 
 <div align="center">
 
-**Reliable evaluation matters more than an impressive accuracy number.**
+**높은 정확도 수치보다 중요한 것은 데이터 누수를 방지하고 검증 절차를 준수한 신뢰할 수 있는 모델 평가입니다.**
 
 </div>
