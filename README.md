@@ -131,4 +131,78 @@ python -m scripts.validate_artifacts results-rerun
 
 Moro, S., Rita, P., & Cortez, P. (2014). *Bank Marketing* [데이터셋]. UCI Machine Learning Repository. 데이터셋 라이선스는 CC BY 4.0입니다. [DOI](https://doi.org/10.24432/C5K306) · [UCI 데이터셋](https://archive.ics.uci.edu/dataset/222/bank%2Bmarketing)
 
+<<<<<<< HEAD
 같은 `bank-full.csv`를 관계형 모델링과 SQL 기술통계에 사용한 별도 프로젝트도 있습니다. [Bank Marketing SQL Analysis](https://github.com/tangerineYR/bank-marketing-sql-analysis)
+=======
+---
+
+## 🔧 Engineering Decisions & Validation
+
+| 검토 항목 | 설계 결정 | 검증 방법 |
+|---|---|---|
+| 입력 변수의 사용 가능 시점 | 사전 연락 대상 선별을 위한 Primary 모델에서 통화 종료 후에만 알 수 있는 `duration` 제외 | Feature Mode 검증 테스트 |
+| 데이터 누수 방지 | 전처리기의 학습(Fit)은 훈련 데이터에만 수행하고 검증·테스트 데이터에는 동일한 변환 적용 | Train-only 전처리 테스트 |
+| 클래스 불균형 대응 | 훈련 데이터의 클래스 분포를 기준으로 BCE 손실함수의 양성 클래스 가중치 계산 | 클래스 가중치 검증 테스트 |
+| 하이퍼파라미터 선택 | 81개 조합을 탐색하고 Validation PR-AUC(AP)를 기준으로 최적 설정 선택 | 탐색 및 모델 선택 테스트 |
+| Early Stopping | 검증 손실이 가장 낮았던 Epoch의 모델 가중치를 복원 | 체크포인트 복원 테스트 |
+| 테스트셋 독립성 | 검증 데이터 기반 모델 선택을 완료한 뒤 분리된 테스트셋에서 최종 성능 평가 | 학습·평가 파이프라인 테스트 |
+| 비교 모델 평가 | DummyClassifier·Logistic Regression·MLP를 동일한 테스트셋에서 평가 | 최종 테스트 성능 지표 |
+| 실험 재현성 | Random Seed, 데이터 분할, 실행 환경, 학습·평가 결과를 기록 | 실험 산출물 및 자동화 테스트 |
+
+### Coursework Implementation
+
+MLP 모델 구조와 81개 하이퍼파라미터 조합 탐색은 2025년 딥러닝개론 수업 프로젝트에서 출발했습니다. 당시 구현 코드는 [`historical/baseline_2025.py`](historical/baseline_2025.py)에 별도로 보존했습니다.
+
+현재 공개된 학습·평가 파이프라인에는 데이터 누수를 고려한 전처리, 검증 데이터 기반 모델 선택, 최적 체크포인트 복원 및 비교 모델 평가를 적용했습니다.
+
+README에 제시된 성능 수치는 보존된 수업 당시 코드가 아니라, 현재 공개된 학습·평가 파이프라인에서 산출한 결과입니다.
+
+---
+
+## ⚠️ Scope & Limitations
+
+**Single Split and Seed.** 현재 수치는 단일 stratified random split과 primary seed 42로 얻은 결과입니다. 여러 seed의 평균 성능이나 신뢰구간을 보고하지 않습니다.
+
+**Temporal Generalization.** Random split은 실제 향후 캠페인으로의 시간적 일반화 성능을 완전히 재현하지 않습니다.
+
+**Feature Availability.** Primary setting에서는 `duration`을 제외했지만, `campaign`, 연락 시점 등의 추가 feature도 구체적인 운영 시점에서 사용 가능한지 확인해야 합니다.
+
+**Class Imbalance.** Majority-class Accuracy만으로 실제 가입 고객 탐지 성능을 판단하지 않습니다. PR-AUC, Precision, Recall, F1 등 여러 지표를 함께 해석합니다.
+
+**Not a Deployed Service.** 이 프로젝트는 학습·평가 실험이며, 실제 은행 고객 데이터나 운영 시스템에 배포된 서비스가 아닙니다.
+
+**No Causal Interpretation.** 관측 데이터의 분류 성능이 특정 마케팅 행동의 인과적 효과를 입증하는 것은 아닙니다.
+
+---
+
+## 📚 Dataset & Attribution
+
+**Dataset:** [Bank Marketing — UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/222/bank+marketing)
+
+Moro, S., Rita, P., & Cortez, P. (2014). *Bank Marketing* [Dataset]. UCI Machine Learning Repository. [DOI: 10.24432/C5K306](https://doi.org/10.24432/C5K306).
+
+데이터셋 라이선스: **CC BY 4.0**.
+
+이 저장소에는 원본 데이터셋 CSV를 포함하지 않습니다. 전체 실험을 실행할 때 UCI에서 제공하는 원본 데이터 아카이브를 다운로드합니다.
+
+---
+
+## 🔗 Related Project
+
+**[Bank Marketing SQL Analysis](https://github.com/tangerineYR/bank-marketing-sql-analysis)**
+
+동일한 Bank Marketing 도메인을 데이터베이스 관점에서 다룬 별도의 개인 프로젝트입니다.
+
+- **연계 프로젝트 — SQL 분석:** 관계형 모델링, 데이터 무결성, SQL 기술통계, 규칙 기반 의사결정 지원
+- **이 프로젝트 — MLP 분류:** PyTorch MLP, 불균형 이진 분류, 학습 최적화, 검증 기반 모델 평가
+
+동일한 데이터 도메인을 서로 다른 기술적 관점에서 분석한 두 프로젝트입니다.
+
+---
+
+<div align="center">
+
+**높은 정확도 수치보다 중요한 것은 데이터 누수를 방지하고 검증 절차를 준수한 신뢰할 수 있는 모델 평가입니다.**
+
+</div>
+>>>>>>> 42886b9a1b88b9d89602f11c2c687de7c2be5a42
